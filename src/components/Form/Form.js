@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Form.scss';
 import SpinnerModal from '../SpinnerModal/SpinnerModal'
 
@@ -8,12 +8,27 @@ export default function ContactForm() {
         name: '',
         email: '',
         anfrage: '',
+        beschreibungstext: '',
         datenschutz: ''
     }
     const [formData, setFormData] = useState(initialState)
-
     const [feedback, setFeedback] = useState('')
     const [loading, setLoading] = useState(false)
+    const [isVisible, setIsVisible] = useState(false)
+
+    useEffect(() => {
+        if (formData.anfrage === 'Option 2') {
+            setIsVisible(true)
+        } else {
+            setIsVisible(false)
+            setFormData({
+                ...formData,
+                beschreibungstext: '' // clear field if user selects option 1 or 3 after having filled it
+            })
+        }
+    }, [formData.anfrage])
+
+    console.log(formData)
 
     const handleChange = e => {
         const isCheckBox = e.target.type === 'checkbox'
@@ -41,12 +56,12 @@ export default function ContactForm() {
             .then(response => response.json())
             .then(json => {
                 setLoading(false)
-                setFeedback(json.success ? 'Ihre Nachricht wurde erfolgreich gesendet' : 'Fehler beim Senden Ihrer Nachricht')
+                setFeedback(json.success ? 'Ihre Nachricht wurde erfolgreich gesendet.' : 'Fehler beim Senden Ihrer Nachricht.')
                 setFormData(initialState)
             })
             .catch(err => {
                 setLoading(false)
-                setFeedback('Fehler beim Senden Ihrer Nachricht')
+                setFeedback('Fehler beim Senden Ihrer Nachricht.')
             })
     }
 
@@ -74,6 +89,13 @@ export default function ContactForm() {
                         <option>Option 3</option>
                     </select>
                 </div>
+                {
+                    isVisible &&
+                    <div className="form-group">
+                        <label htmlFor="inputBeschreibungstext" className="label">Beschreibungstext</label>
+                        <input name="beschreibungstext" type="text" className="form-control" id="inputBeschreibungstext" placeholder="Beschreibungstext" onChange={handleChange} value={formData.beschreibungstext} required />
+                    </div>
+                }
                 <div className="form-group">
                     <div className="">Datenschutz Zustimmung*</div>
                     <div className="form-check">
