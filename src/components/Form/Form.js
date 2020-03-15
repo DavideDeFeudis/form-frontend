@@ -9,7 +9,7 @@ export default function ContactForm() {
         email: '',
         anfrage: '',
         beschreibungstext: '',
-        datenschutz: ''
+        datenschutz: false
     }
     const [formData, setFormData] = useState(initialState)
     const [feedback, setFeedback] = useState('')
@@ -27,8 +27,6 @@ export default function ContactForm() {
             })
         }
     }, [formData.anfrage])
-
-    console.log(formData)
 
     const handleChange = e => {
         const isCheckBox = e.target.type === 'checkbox'
@@ -58,6 +56,7 @@ export default function ContactForm() {
                 setLoading(false)
                 setFeedback(json.success ? 'Ihre Nachricht wurde erfolgreich gesendet.' : 'Fehler beim Senden Ihrer Nachricht.')
                 setFormData(initialState)
+
             })
             .catch(err => {
                 setLoading(false)
