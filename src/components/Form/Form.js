@@ -54,13 +54,13 @@ export default function ContactForm() {
             .then(response => response.json())
             .then(json => {
                 setLoading(false)
-                setFeedback(json.success ? 'Ihre Nachricht wurde erfolgreich gesendet.' : 'Fehler beim Senden Ihrer Nachricht.')
+                setFeedback(json.success ? 'Ihre Anfrage wurde erfolgreich gesendet.' : 'Fehler beim Senden Ihrer Anfrage.')
                 setFormData(initialState)
 
             })
             .catch(err => {
                 setLoading(false)
-                setFeedback('Fehler beim Senden Ihrer Nachricht.')
+                setFeedback('Fehler beim Senden Ihrer Anfrage.')
             })
     }
 
