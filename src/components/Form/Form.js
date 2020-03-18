@@ -44,7 +44,7 @@ export default function ContactForm() {
     }
 
     const sendFormData = () => {
-        fetch(`${process.env.REACT_APP_BACKEND_HOST}/contact`, {
+        fetch(`${process.env.REACT_APP_BACKEND_HOST}/user`, {
             method: "POST",
             body: JSON.stringify(formData),
             headers: {
@@ -53,12 +53,14 @@ export default function ContactForm() {
         })
             .then(response => response.json())
             .then(json => {
+                console.log(json)
                 setLoading(false)
                 setFeedback(json.success ? 'Ihre Anfrage wurde erfolgreich gesendet.' : 'Fehler beim Senden Ihrer Anfrage.')
                 setFormData(initialState)
 
             })
             .catch(err => {
+                console.log('Fehler beim Senden Ihrer Anfrage:', err)
                 setLoading(false)
                 setFeedback('Fehler beim Senden Ihrer Anfrage.')
             })
@@ -66,10 +68,10 @@ export default function ContactForm() {
 
     return (
         <div className="container">
-            <form onSubmit={handleSubmit}>
+            <form role="form" data-toggle="validator" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="inputAnrede" className="label">Anrede*</label>
-                    <input name="anrede" type="text" className="form-control" id="inputAnrede" placeholder="Anrede" onChange={handleChange} value={formData.anrede} required />
+                    <input pattern="(.|\s)*\S(.|\s)*" data-error="Invalid" name="anrede" type="text" className="form-control" id="inputAnrede" placeholder="Anrede" onChange={handleChange} value={formData.anrede} required />
                 </div>
                 <div className="form-group">
                     <label htmlFor="inputName" className="label">Name*</label>
