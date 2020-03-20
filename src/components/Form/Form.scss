@@ -5,3 +5,12 @@ form {
   margin: 3em auto;
   padding: 0 1em;
 }
+
+p.error {
+  color: #bf1650;
+
+  &::before {
+    display: inline;
+    content: "⚠ ";
+  }
+}

@@ -64,19 +64,22 @@ export default function ContactForm() {
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
-          <label htmlFor="inputAnrede" className="label">
+          <label htmlFor="anrede" className="label">
             Anrede*
           </label>
-          <input
-            pattern="(.|\s)*\S(.|\s)*"
-            data-error="Invalid"
+          <select
             name="anrede"
-            type="text"
             className="form-control"
-            id="inputAnrede"
-            placeholder="Anrede"
-            ref={register}
-          />
+            id="anrede"
+            ref={register({
+              required: "Pflichtfeld."
+            })}
+          >
+            <option value="">--Auswählen--</option>
+            <option>Frau</option>
+            <option>Herr</option>
+          </select>
+          {errors.anrede && <p className="error">{errors.anrede.message}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="inputName" className="label">
@@ -93,11 +96,11 @@ export default function ContactForm() {
               minLength: {
                 value: 2,
                 message: "Name muss mindestens 8 Zeichen lang sein."
-              }
+              } // pattern="(.|\s)*\S(.|\s)*"
             })}
           />
+        {errors.name && <p className="error">{errors.name.message}</p>}
         </div>
-        {errors.name && <p>{errors.name.message}</p>}
         <div className="form-group">
           <label htmlFor="inputEmail" className="label">
             Email*
@@ -116,27 +119,27 @@ export default function ContactForm() {
               }
             })}
           />
+        {errors.email && <p className="error">{errors.email.message}</p>}
         </div>
-        {errors.email && <p>{errors.email.message}</p>}
         <div className="form-group">
-          <label htmlFor="exampleFormControlSelect1" className="label">
+          <label htmlFor="anfrage" className="label">
             Anfrage*
           </label>
           <select
             name="anfrage"
             className="form-control"
-            id="exampleFormControlSelect1"
+            id="anfrage"
             ref={register({
               required: "Pflichtfeld."
             })}
           >
-            <option value="">--Wählen Sie bitte eine Option--</option>
+            <option value="">--Auswählen--</option>
             <option>Option 1</option>
             <option>Option 2</option>
             <option>Option 3</option>
           </select>
+        {errors.anfrage && <p className="error">{errors.anfrage.message}</p>}
         </div>
-        {errors.anfrage && <p>{errors.anfrage.message}</p>}
         {isVisible && (
           <div className="form-group">
             <label htmlFor="inputBeschreibungstext" className="label">
@@ -153,7 +156,7 @@ export default function ContactForm() {
               })}
             />
             {errors.beschreibungstext && (
-              <p>{errors.beschreibungstext.message}</p>
+              <p className="error">{errors.beschreibungstext.message}</p>
             )}
           </div>
         )}
@@ -173,7 +176,9 @@ export default function ContactForm() {
               Mit dem Absenden stimme ich den Datenschutzbestimmungen zu.
             </label>
           </div>
-          {errors.datenschutz && <p>{errors.datenschutz.message}</p>}
+          {errors.datenschutz && (
+            <p className="error">{errors.datenschutz.message}</p>
+          )}
         </div>
         <div className="form-group">
           <button type="submit" className="btn btn-secondary">
