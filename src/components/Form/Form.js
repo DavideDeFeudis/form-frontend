@@ -8,6 +8,9 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, watch, errors } = useForm();
   const anfrage = watch("anfrage");
+  const onFocus = () => {
+    if (feedback !== "") setFeedback("");
+  };
   const onSubmit = data => {
     setLoading(true);
     fetch(`${process.env.REACT_APP_BACKEND_HOST}/user`, {
@@ -44,6 +47,7 @@ export default function ContactForm() {
             name="anrede"
             className="form-control"
             id="anrede"
+            onFocus={onFocus}
             ref={register({
               required: "Pflichtfeld"
             })}
@@ -64,6 +68,7 @@ export default function ContactForm() {
             className="form-control"
             id="inputName"
             placeholder="Name"
+            onFocus={onFocus}
             ref={register({
               required: "Pflichtfeld",
               minLength: {
@@ -88,6 +93,7 @@ export default function ContactForm() {
             className="form-control"
             id="inputEmail"
             placeholder="E-Mail"
+            onFocus={onFocus}
             ref={register({
               required: "Pflichtfeld",
               pattern: {
@@ -107,6 +113,7 @@ export default function ContactForm() {
             className="form-control"
             id="anfrage"
             value={anfrage}
+            onFocus={onFocus}
             ref={register({
               required: "Pflichtfeld"
             })}
@@ -150,6 +157,7 @@ export default function ContactForm() {
               className="form-check-input"
               type="checkbox"
               id="gridCheck1"
+              onFocus={onFocus}
               ref={register({
                 required: "Sie müssen zustimmen"
               })}
@@ -166,6 +174,20 @@ export default function ContactForm() {
           <button type="submit" className="btn btn-secondary">
             Absenden
           </button>
+          {/* <div
+            className="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            Success
+            <button
+              type="button"
+              className="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div> */}
           <p className="my-3">{feedback}</p>
         </div>
       </form>
