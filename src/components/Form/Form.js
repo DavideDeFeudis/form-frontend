@@ -4,35 +4,34 @@ import SpinnerModal from "../SpinnerModal/SpinnerModal";
 import { useForm } from "react-hook-form";
 
 export default function ContactForm() {
-  const { register, handleSubmit, watch, errors } = useForm();
-  const onSubmit = data => {
-    console.log(data);
-    // fetch(`${process.env.REACT_APP_BACKEND_HOST}/user`, {
-    //     method: "POST",
-    //     body: JSON.stringify(data),
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     }
-    // })
-    // .then(response => response.json())
-    // .then(json => {
-    //     console.log(json)
-    //     setLoading(false)
-    //     setFeedback(json.success ? 'Ihre Anfrage wurde erfolgreich gesendet.' : 'Fehler beim Senden Ihrer Anfrage.')
-    //     // setFormData(initialState)
-
-    // })
-    // .catch(err => {
-    //     console.log('Fehler beim Senden Ihrer Anfrage:', err)
-    //     setLoading(false)
-    //     setFeedback('Fehler beim Senden Ihrer Anfrage.')
-    // })
-  };
-
   const [anfrage, setAnfrage] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const { register, handleSubmit, errors } = useForm();
+  const onSubmit = data => {
+    setLoading(true);
+    fetch(`${process.env.REACT_APP_BACKEND_HOST}/user`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        setLoading(false);
+        setFeedback(
+          json.success
+            ? "Ihre Anfrage wurde erfolgreich gesendet"
+            : "Fehler beim Senden Ihrer Anfrage"
+        );
+      })
+      .catch(err => {
+        setLoading(false);
+        setFeedback("Fehler beim Senden Ihrer Anfrage");
+      });
+  };
 
   const handleChange = e => {
     setAnfrage(e.target.value);
@@ -41,21 +40,6 @@ export default function ContactForm() {
   useEffect(() => {
     setIsVisible(anfrage === "Option 2");
   }, [anfrage]);
-
-  // const handleChange = e => {
-  //     const isCheckBox = e.target.type === 'checkbox'
-  //     setFormData({
-  //         ...formData,
-  //         [e.target.name]: isCheckBox ? e.target.checked : e.target.value
-  //     })
-  //     if (feedback) setFeedback('')
-  // }
-
-  // const handleSubmit = e => {
-  //     e.preventDefault()
-  //     setLoading(true)
-  //     sendFormData()
-  // }
 
   return (
     <div className="container">
@@ -69,7 +53,7 @@ export default function ContactForm() {
             className="form-control"
             id="anrede"
             ref={register({
-              required: "Pflichtfeld."
+              required: "Pflichtfeld"
             })}
           >
             <option value="">--Auswählen--</option>
@@ -89,11 +73,15 @@ export default function ContactForm() {
             id="inputName"
             placeholder="Name"
             ref={register({
-              required: "Pflichtfeld.",
+              required: "Pflichtfeld",
               minLength: {
                 value: 2,
-                message: "Name muss mindestens 8 Zeichen lang sein."
-              } // pattern="(.|\s)*\S(.|\s)*"
+                message: "Name muss mindestens 8 Zeichen lang sein"
+              },
+              pattern: {
+                value: /(.|\s)*\S(.|\s)*/,
+                message: "Dieses Feld darf nicht nur Leerzeichen enthalten"
+              }
             })}
           />
           {errors.name && <p className="error">{errors.name.message}</p>}
@@ -109,10 +97,10 @@ export default function ContactForm() {
             id="inputEmail"
             placeholder="E-Mail"
             ref={register({
-              required: "Pflichtfeld.",
+              required: "Pflichtfeld",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: "Geben Sie bitte eine gültige E-Mail-Adresse an."
+                message: "Geben Sie bitte eine gültige E-Mail-Adresse an"
               }
             })}
           />
@@ -129,7 +117,7 @@ export default function ContactForm() {
             value={anfrage}
             onChange={handleChange}
             ref={register({
-              required: "Pflichtfeld."
+              required: "Pflichtfeld"
             })}
           >
             <option value="">--Auswählen--</option>
@@ -151,7 +139,11 @@ export default function ContactForm() {
               id="inputBeschreibungstext"
               placeholder="Beschreibungstext"
               ref={register({
-                required: "Pflichtfeld."
+                required: "Pflichtfeld",
+                pattern: {
+                  value: /(.|\s)*\S(.|\s)*/,
+                  message: "Dieses Feld darf nicht nur Leerzeichen enthalten"
+                }
               })}
             />
             {errors.beschreibungstext && (
@@ -168,11 +160,11 @@ export default function ContactForm() {
               type="checkbox"
               id="gridCheck1"
               ref={register({
-                required: "Pflichtfeld."
+                required: "Sie müssen zustimmen"
               })}
             />
             <label className="form-check-label" htmlFor="gridCheck1">
-              Mit dem Absenden stimme ich den Datenschutzbestimmungen zu.
+              Mit dem Absenden stimme ich den Datenschutzbestimmungen zu
             </label>
           </div>
           {errors.datenschutz && (
