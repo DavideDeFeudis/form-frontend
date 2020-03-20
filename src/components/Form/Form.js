@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Form.scss";
 import SpinnerModal from "../SpinnerModal/SpinnerModal";
 import { useForm } from "react-hook-form";
 
 export default function ContactForm() {
-  const [anfrage, setAnfrage] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, watch, errors } = useForm();
+  const anfrage = watch("anfrage");
   const onSubmit = data => {
     setLoading(true);
     fetch(`${process.env.REACT_APP_BACKEND_HOST}/user`, {
@@ -21,25 +20,18 @@ export default function ContactForm() {
       .then(response => response.json())
       .then(json => {
         setLoading(false);
-        setFeedback(
-          json.success
-            ? "Ihre Anfrage wurde erfolgreich gesendet"
-            : "Fehler beim Senden Ihrer Anfrage"
-        );
+        if (json.success) {
+          document.querySelector("form").reset();
+          setFeedback("Ihre Anfrage wurde erfolgreich gesendet");
+        } else {
+          setFeedback("Fehler beim Senden Ihrer Anfrage");
+        }
       })
       .catch(err => {
         setLoading(false);
         setFeedback("Fehler beim Senden Ihrer Anfrage");
       });
   };
-
-  const handleChange = e => {
-    setAnfrage(e.target.value);
-  };
-
-  useEffect(() => {
-    setIsVisible(anfrage === "Option 2");
-  }, [anfrage]);
 
   return (
     <div className="container">
@@ -115,7 +107,6 @@ export default function ContactForm() {
             className="form-control"
             id="anfrage"
             value={anfrage}
-            onChange={handleChange}
             ref={register({
               required: "Pflichtfeld"
             })}
@@ -127,7 +118,7 @@ export default function ContactForm() {
           </select>
           {errors.anfrage && <p className="error">{errors.anfrage.message}</p>}
         </div>
-        {isVisible && (
+        {anfrage === "Option 2" && (
           <div className="form-group">
             <label htmlFor="inputBeschreibungstext" className="label">
               Beschreibungstext

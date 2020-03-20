@@ -10,8 +10,8 @@ export default function Users() {
 
   let content = (
     <div className="fetching-spinner container text-center">
-      <img src={loadingGif} width="40" height="40" alt="loading..." />
-      <p className="mt-3">Loading users...</p>
+      <img src={loadingGif} width="40" height="40" alt="Users werden geladen..." />
+      <p className="mt-3">Users werden geladen...</p>
     </div>
   );
   const usersList = fetchedData
