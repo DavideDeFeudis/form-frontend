@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 export default function Form() {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, watch, errors, reset } = useForm();
   const anfrage = watch("anfrage");
   const onFocus = () => {
     if (response) setResponse(null);
@@ -24,7 +24,7 @@ export default function Form() {
       .then(json => {
         setLoading(false);
         if (json.success) {
-          document.querySelector("form").reset();
+          reset(); // clear inputs and errors (errors will not show when filling form on second time before submit)
           setResponse("success");
         } else {
           setResponse("fail");
