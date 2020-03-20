@@ -29,21 +29,18 @@ export default function ContactForm() {
     // })
   };
 
+  const [anfrage, setAnfrage] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); // beschreibungstext
+  const [isVisible, setIsVisible] = useState(false);
 
-  // useEffect(() => {
-  //     if (formData.anfrage === 'Option 2') {
-  //         setIsVisible(true)
-  //     } else {
-  //         setIsVisible(false)
-  //         // setFormData({
-  //         //     ...formData,
-  //         //     beschreibungstext: '' // clear field if user selects option 1 or 3 after having filled it
-  //         // })
-  //     }
-  // }, []) // need state for anfrage? and for text to clear it?
+  const handleChange = e => {
+    setAnfrage(e.target.value);
+  };
+
+  useEffect(() => {
+    setIsVisible(anfrage === "Option 2");
+  }, [anfrage]);
 
   // const handleChange = e => {
   //     const isCheckBox = e.target.type === 'checkbox'
@@ -99,7 +96,7 @@ export default function ContactForm() {
               } // pattern="(.|\s)*\S(.|\s)*"
             })}
           />
-        {errors.name && <p className="error">{errors.name.message}</p>}
+          {errors.name && <p className="error">{errors.name.message}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="inputEmail" className="label">
@@ -119,7 +116,7 @@ export default function ContactForm() {
               }
             })}
           />
-        {errors.email && <p className="error">{errors.email.message}</p>}
+          {errors.email && <p className="error">{errors.email.message}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="anfrage" className="label">
@@ -129,6 +126,8 @@ export default function ContactForm() {
             name="anfrage"
             className="form-control"
             id="anfrage"
+            value={anfrage}
+            onChange={handleChange}
             ref={register({
               required: "Pflichtfeld."
             })}
@@ -138,7 +137,7 @@ export default function ContactForm() {
             <option>Option 2</option>
             <option>Option 3</option>
           </select>
-        {errors.anfrage && <p className="error">{errors.anfrage.message}</p>}
+          {errors.anfrage && <p className="error">{errors.anfrage.message}</p>}
         </div>
         {isVisible && (
           <div className="form-group">
