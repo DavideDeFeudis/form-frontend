@@ -3,13 +3,13 @@ import "./Form.scss";
 import SpinnerModal from "../SpinnerModal/SpinnerModal";
 import { useForm } from "react-hook-form";
 
-export default function ContactForm() {
-  const [feedback, setFeedback] = useState("");
+export default function Form() {
+  const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, watch, errors } = useForm();
   const anfrage = watch("anfrage");
   const onFocus = () => {
-    if (feedback !== "") setFeedback("");
+    if (response) setResponse(null);
   };
   const onSubmit = data => {
     setLoading(true);
@@ -20,21 +20,29 @@ export default function ContactForm() {
         "Content-Type": "application/json"
       }
     })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(json => {
         setLoading(false);
         if (json.success) {
           document.querySelector("form").reset();
-          setFeedback("Ihre Anfrage wurde erfolgreich gesendet");
+          setResponse("success");
         } else {
-          setFeedback("Fehler beim Senden Ihrer Anfrage");
+          setResponse("fail");
         }
       })
       .catch(err => {
         setLoading(false);
-        setFeedback("Fehler beim Senden Ihrer Anfrage");
+        setResponse("fail");
       });
   };
+  let feedback = null;
+  if (response === "success") {
+    feedback = (
+      <p className="my-3 success">Ihre Anfrage wurde erfolgreich gesendet!</p>
+    );
+  } else if (response === "fail") {
+    feedback = <p className="my-3 fail">Fehler beim Senden Ihrer Anfrage!</p>;
+  }
 
   return (
     <div className="container">
@@ -174,21 +182,7 @@ export default function ContactForm() {
           <button type="submit" className="btn btn-secondary">
             Absenden
           </button>
-          {/* <div
-            className="alert alert-success alert-dismissible fade show"
-            role="alert"
-          >
-            Success
-            <button
-              type="button"
-              className="close"
-              data-dismiss="alert"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div> */}
-          <p className="my-3">{feedback}</p>
+          {feedback}
         </div>
       </form>
       <SpinnerModal loading={loading} fullScreen />

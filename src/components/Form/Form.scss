@@ -7,10 +7,18 @@ form {
 }
 
 p.error {
-  color: #bf1650;
+  color: red;
 
   &::before {
     display: inline;
     content: "⚠ ";
   }
+}
+
+.success {
+  color: green;
+}
+
+.fail {
+  color: red;
 }
