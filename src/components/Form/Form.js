@@ -2,39 +2,69 @@ import React, { useState } from "react";
 import "./Form.scss";
 import SpinnerModal from "../SpinnerModal/SpinnerModal";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 export default function Form() {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, watch, errors, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    errors,
+    reset,
+    formState
+  } = useForm();
   const anfrage = watch("anfrage");
   const onFocus = () => {
     if (response) setResponse(null);
   };
-  const onSubmit = data => {
+
+  const onSubmit = async formData => {
     setLoading(true);
-    fetch(`${process.env.REACT_APP_BACKEND_HOST}/user`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(json => {
-        setLoading(false);
-        if (json.success) {
-          reset(); // clear inputs and errors (errors will not show when filling form on second time before submit)
-          setResponse("success");
-        } else {
-          setResponse("fail");
-        }
-      })
-      .catch(err => {
-        setLoading(false);
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_HOST}/user`,
+        formData
+      );
+      setLoading(false);
+      if (res.data.success) {
+        reset();
+        setResponse("success");
+      } else {
         setResponse("fail");
-      });
+      }
+    } catch (e) {
+      setLoading(false);
+      setResponse("fail");
+    }
   };
+
+  // const onSubmit = data => {
+  //   setLoading(true);
+  //   fetch(`${process.env.REACT_APP_BACKEND_HOST}/user`, {
+  //     method: "POST",
+  //     body: JSON.stringify(data),
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(json => {
+  //       setLoading(false);
+  //       if (json.success) {
+  //         reset(); // clear inputs and errors (errors will not show when filling form on second time before submit)
+  //         setResponse("success");
+  //       } else {
+  //         setResponse("fail");
+  //       }
+  //     })
+  //     .catch(err => {
+  //       setLoading(false);
+  //       setResponse("fail");
+  //     });
+  // };
+
   let feedback = null;
   if (response === "success") {
     feedback = (
@@ -185,6 +215,7 @@ export default function Form() {
           {feedback}
         </div>
       </form>
+      <pre>{JSON.stringify(formState, null, 2)}</pre>
       <SpinnerModal loading={loading} fullScreen />
     </div>
   );
