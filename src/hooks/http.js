@@ -1,23 +1,21 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
-export const useHttp = (url, dependencies) => {
+export const useHttp = () => {
+  const url = process.env.REACT_APP_BACKEND_HOST + "/users";
   const [isLoading, setIsLoading] = useState(true);
   const [fetchedData, setFetchedData] = useState(null);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const req = await fetch(url, {
-          headers: { "Content-Type": "application/json" }
-        });
-        const res = await req.json();
+        const res = await axios.get(url);
         setIsLoading(false);
-        setFetchedData(res);
+        setFetchedData(res.data);
       } catch (e) {
         setIsLoading(false);
       }
     };
     fetchData();
-  }, dependencies);
+  }, []);
   return [isLoading, fetchedData];
 };

@@ -5,8 +5,7 @@ import { useHttp } from "../../hooks/http";
 import "./Users.scss";
 
 export default function Users() {
-  const url = process.env.REACT_APP_BACKEND_HOST + "/users";
-  let [isLoading, fetchedData] = useHttp(url, []);
+  let [isLoading, fetchedData] = useHttp();
   let content = (
     <div className="text-center">
       <img
