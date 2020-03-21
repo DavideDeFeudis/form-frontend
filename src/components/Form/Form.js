@@ -14,23 +14,25 @@ export default function Form() {
   };
   const onSubmit = formData => {
     setLoading(true);
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_HOST}/user`, formData, {
-        timeout: 7000
-      })
-      .then(res => {
-        setLoading(false);
-        if (res.data.success) {
-          reset();
-          setResponse("success");
-        } else {
+    setTimeout(() => {
+      axios
+        .post(`${process.env.REACT_APP_BACKEND_HOST}/user`, formData, {
+          timeout: 7000
+        })
+        .then(res => {
+          setLoading(false);
+          if (res.data.success) {
+            reset();
+            setResponse("success");
+          } else {
+            setResponse("fail");
+          }
+        })
+        .catch(err => {
+          setLoading(false);
           setResponse("fail");
-        }
-      })
-      .catch(err => {
-        setLoading(false);
-        setResponse("fail");
-      });
+        });
+    }, 2000);
   };
   let feedback = null;
   if (response === "success") {
@@ -182,7 +184,7 @@ export default function Form() {
           {feedback}
         </div>
       </form>
-      <SpinnerModal loading={loading} fullScreen />
+      <SpinnerModal loading={loading} />
     </div>
   );
 }
