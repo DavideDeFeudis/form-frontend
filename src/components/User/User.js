@@ -2,7 +2,7 @@ import React from "react";
 
 export default function User({ user }) {
   return (
-    <p>
+    <li className="list-group-item">
       Anrede: {user.anrede}
       <br />
       Name: {user.name}
@@ -14,6 +14,6 @@ export default function User({ user }) {
       {user.beschreibungstext && (
         <span>Beschreibungstext: {user.beschreibungstext}</span>
       )}
-    </p>
+    </li>
   );
 }

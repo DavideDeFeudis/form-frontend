@@ -8,7 +8,7 @@ export default function Users() {
   const url = process.env.REACT_APP_BACKEND_HOST + "/users";
   let [isLoading, fetchedData] = useHttp(url, []);
   let content = (
-    <div className="fetching-spinner container text-center">
+    <div className="text-center">
       <img
         src={loadingGif}
         width="40"
@@ -21,13 +21,13 @@ export default function Users() {
   if (!isLoading && fetchedData && fetchedData.length > 0) {
     content = fetchedData.map(user => <User key={user._id} user={user} />);
   } else if (!isLoading && !fetchedData) {
-    content = <p className="my-5">Ein Fehler ist aufgetreten</p>;
+    content = <p className="text-center my-5">Ein Fehler ist aufgetreten</p>;
   } else if (!isLoading && fetchedData.length === 0) {
-    content = <p className="my-5">Derzeit sind keine Benutzer vorhanden</p>;
+    content = <p className="text-center my-5">Derzeit sind keine Benutzer vorhanden</p>;
   }
   return (
-    <div className="wrapper">
-      <div className="users-container">{content}</div>
+    <div className="users-container">
+      <ul className="list-group">{content}</ul>
     </div>
   );
 }
