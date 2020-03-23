@@ -16,7 +16,7 @@ export default function Form() {
     setLoading(true);
     setTimeout(() => {
       axios
-        .post(`${process.env.REACT_APP_BACKEND_HOST}/user`, formData, {
+        .post(`${process.env.REACT_APP_BACKEND_HOST}/users`, formData, {
           timeout: 7000
         })
         .then(res => {
@@ -80,7 +80,7 @@ export default function Form() {
               required: "Pflichtfeld",
               minLength: {
                 value: 2,
-                message: "Name muss mindestens 8 Zeichen lang sein"
+                message: "Name muss mindestens 2 Zeichen lang sein"
               },
               pattern: {
                 value: /(.|\s)*\S(.|\s)*/,
